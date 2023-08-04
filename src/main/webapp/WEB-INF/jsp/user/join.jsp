@@ -56,5 +56,66 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	
+	<script>
+		$(document).ready(function() {
+			
+			$("#signUpBtn").on("click", function() {
+				let id = $("#loginIdInput").val();
+				let password = $("#passwordInput").val();
+				let passwordConfirm = $("#passwordConfirmInput").val();
+				let name = $("#nameInput").val();
+				let email = $("#emailInput").val();
+				
+				if(id == "") {
+					alert("아이디를 입력하세요");
+					return;
+				}
+				
+				if(password == "") {
+					alert("비밀번호를 입력하세요");
+					retrun;
+				}
+				
+				if(password != passwordConfirm) {
+					alert("비밀번호가 일치하지 않습니다");
+					return ;
+				}
+				
+				if(name == "") {
+					alert("이름을 입력하세요");
+					return ;
+				}
+				
+				if(email == "") {
+					alert("이메일을 입력하세요");
+					return ;
+				}
+				
+				$.ajax({
+					type:"post"
+					, url:"/user/join"
+					, data:{"loginId":id, "password":password, "name":name, "email":email}
+					, success:function(data) {
+						if(data.result == "success") {
+							location.href = "/user/login-view";
+						} else {
+							alert("회원가입 실패");
+						}
+						
+					}
+					, error:function() {
+						alert("회원가입 에러");
+					}
+				})
+				
+				
+			});
+			
+		});
+	
+	
+	</script>
+	
+	
 </body>
 </html>
