@@ -28,7 +28,7 @@
 							<input type="text" id="loginIdInput" class="form-control" placeholder="아이디">
 							<button type="button" class="btn btn-info btn-sm ml-2" id="isDuplicateBtn">중복확인</button>
 						</div>
-						<div class="small text-success d-none" id="availableText">사용가능한 아이디 입니다</div>
+						<div class="small text-success d-none" id="avaliableText">사용가능한 아이디 입니다</div>
 						<div class="small text-danger d-none" id="duplicateText">중복된 아이디 입니다</div>
 					
 						<input type="password" id="passwordInput" class="form-control mt-3" placeholder="패스워드">
@@ -59,6 +59,52 @@
 	<script>
 		$(document).ready(function() {
 			
+			var isChecked = false;
+			var isDuplicateId = true;
+			
+			$("#loginIdInput").on("input", function() {
+				// 중복확인과 관련된 모든 상황을 초기화 한다. 
+				isChecked = false;
+				isDuplicateId = true;
+				
+				$("#avaliableText").addClass("d-none");
+				$("#duplicateText").addClass("d-none");
+			});
+			
+			$("#isDuplicateBtn").on("click", function() {
+				let id = $("#loginIdInput").val();
+				
+				if(id == "") {
+					alert("아이디를 입력하세요");
+					return;
+				}
+				
+				$.ajax({
+					type:"get"
+					, url:"/user/duplicate-id"
+					, data:{"loginId":id}
+					, success:function(data) {
+						// 중복확인 했음 
+						isChecked = true;
+						
+						isDuplicateId = data.isDuplicate;
+						// 중복됨
+						if(data.isDuplicate) {
+							$("#duplicateText").removeClass("d-none");
+							$("#avaliableText").addClass("d-none");
+						} else {  // 중복 안됨
+							$("#avaliableText").removeClass("d-none");
+							$("#duplicateText").addClass("d-none");
+						}
+						
+					}
+					, error:function() {
+						alert("중복확인 에러");
+					}
+				});
+			});
+			
+			
 			$("#signUpBtn").on("click", function() {
 				let id = $("#loginIdInput").val();
 				let password = $("#passwordInput").val();
@@ -71,9 +117,21 @@
 					return;
 				}
 				
+				// 중복확인 안한 경우 
+				if(!isChecked) {
+					alert("아이디 중복확인을 해주세요");
+					return ;
+				}
+				
+				// 중복된 id인 경우 
+				if(isDuplicateId) {
+					alert("중복된 Id 입니다.");
+					return ;
+				}
+				
 				if(password == "") {
 					alert("비밀번호를 입력하세요");
-					retrun;
+					return;
 				}
 				
 				if(password != passwordConfirm) {

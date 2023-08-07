@@ -45,5 +45,53 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	
+	<script>
+		$(document).ready(function() {
+			
+			//$("#loginBtn").on("click", function() {
+				
+			$("#loginForm").on("submit", function(e) {
+				
+				// 이벤트 고유의 기능을 취소한다. 
+				e.preventDefault();
+			
+				let id = $("#loginIdInput").val();
+				let password = $("#passwordInput").val();
+				
+				if(id == "") {
+					alert("아이디를 입력하세요");
+					return ;
+				}
+				
+				if(password == "") {
+					alert("비밀번호를 입력하세요");
+					return ;
+				}
+				
+				$.ajax({
+					type:"post"
+					, url:"/user/login"
+					, data:{"loginId":id, "password":password}
+					, success:function(data) {
+						if(data.result == "success") {
+							location.href = "/timeline-view";
+						} else {
+							alert("아이디, 비밀번호를 확인하세요");
+							return ;
+						}
+					}
+					, error:function() {
+						alert("로그인 에러!");
+					}
+				});
+				
+			});
+			
+			
+		});
+	
+	</script>
+	
+	
 </body>
 </html>
