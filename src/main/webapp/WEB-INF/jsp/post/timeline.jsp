@@ -20,31 +20,32 @@
 			<div class="timeline">
 				<!-- 입력 박스 -->
 				<div class="input-box border rounded">
-					<textarea rows="4" class="form-control border-0"></textarea>
+					<textarea rows="4" class="form-control border-0" id="contentInput"></textarea>
 					<div class="d-flex justify-content-between p-2">
 						<i class="bi bi-image image-icon-size" id="imageIcon"></i>
 						<input type="file" id="fileInput" class="d-none">
-						<button type="button" class="btn btn-info btn-sm">업로드</button>
+						<button type="button" class="btn btn-info btn-sm" id="uploadBtn">업로드</button>
 					</div>
 				</div>
 				<!-- /입력박스 -->
 				
 				<!-- 카드 리스트  -->
 				<div class="card-list mt-3">
+					<c:forEach var="post" items="${postList }">
 					<!-- 카드 -->
 					<div class="card my-3">
 						<div class="d-flex justify-content-between p-2">
-							<div>hagulu</div>
+							<div>${post.userName }</div>
 							<i class="bi bi-three-dots-vertical"></i>
 						</div>
 						<div>
-							<img class="w-100" src="https://cdn.pixabay.com/photo/2023/07/28/18/23/bird-8155768_1280.jpg">
+							<img class="w-100" src="${post.imagePath }">
 						</div>
 						<div class="p-2">
 							<i class="bi bi-heart"></i> 좋아요 11개
 						</div>
 						<div class="p-2">
-							<b>hagulu</b> 독수리가 멋있네요 으하하하핳
+							<b>${post.userName }</b> ${post.content }
 						</div>
 						
 						<!-- 댓글 박스 -->
@@ -68,81 +69,8 @@
 						<!-- /댓글 박스 -->
 					</div>
 					<!-- /카드 -->
-					<!-- 카드 -->
-					<div class="card my-3">
-						<div class="d-flex justify-content-between p-2">
-							<div>hagulu</div>
-							<i class="bi bi-three-dots-vertical"></i>
-						</div>
-						<div>
-							<img class="w-100" src="https://cdn.pixabay.com/photo/2023/07/28/18/23/bird-8155768_1280.jpg">
-						</div>
-						<div class="p-2">
-							<i class="bi bi-heart"></i> 좋아요 11개
-						</div>
-						<div class="p-2">
-							<b>hagulu</b> 독수리가 멋있네요 으하하하핳
-						</div>
-						
-						<!-- 댓글 박스 -->
-						<div class="comment-box small">
-							<div class="px-2">댓글</div>
-							
-							<div class="px-2">
-								<div>
-									<b>hagulu</b> 우와 진짜 멋있네?
-								</div>
-								<div>
-									<b>bada</b> 무서워 ㅠㅠ
-								</div>
-							</div>
-						
-							<div class="d-flex mt-2">
-								<input type="text" class="form-control">
-								<button type="button" class="btn btn-info">게시</button>
-							</div>
-						</div>
-						<!-- /댓글 박스 -->
-					</div>
-					<!-- /카드 -->
+					</c:forEach>
 					
-					<!-- 카드 -->
-					<div class="card my-3">
-						<div class="d-flex justify-content-between p-2">
-							<div>hagulu</div>
-							<i class="bi bi-three-dots-vertical"></i>
-						</div>
-						<div>
-							<img class="w-100" src="https://cdn.pixabay.com/photo/2023/07/28/18/23/bird-8155768_1280.jpg">
-						</div>
-						<div class="p-2">
-							<i class="bi bi-heart"></i> 좋아요 11개
-						</div>
-						<div class="p-2">
-							<b>hagulu</b> 독수리가 멋있네요 으하하하핳
-						</div>
-						
-						<!-- 댓글 박스 -->
-						<div class="comment-box small">
-							<div class="px-2">댓글</div>
-							
-							<div class="px-2">
-								<div>
-									<b>hagulu</b> 우와 진짜 멋있네?
-								</div>
-								<div>
-									<b>bada</b> 무서워 ㅠㅠ
-								</div>
-							</div>
-						
-							<div class="d-flex mt-2">
-								<input type="text" class="form-control">
-								<button type="button" class="btn btn-info">게시</button>
-							</div>
-						</div>
-						<!-- /댓글 박스 -->
-					</div>
-					<!-- /카드 -->
 				</div>
 				<!-- /카드 리스트 -->
 				
@@ -158,6 +86,51 @@
 	
 	<script>
 		$(document).ready(function() {
+			
+			$("#uploadBtn").on("click", function() {
+					
+				let content = $("#contentInput").val();
+				let file = $("#fileInput")[0];
+				
+				if(content == "") {
+					alert("내용을 입력하세요");
+					return ;
+				}
+				
+				// 파일이 선택되지 않은 경우 유효성 검사 
+				if(file.files.length == 0) {
+					alert("파일을 선택하세요");
+					return ;
+				}
+				
+				var formData = new FormData();
+				formData.append("content", content);
+				formData.append("file", file.files[0]);
+				
+				$.ajax({
+					type:"post"
+					, url:"/post/create"
+					, data:formData
+					, enctype:"multipart/form-data"
+					, processData:false
+					, contentType:false
+					, success:function(data) {
+						if(data.result == "success") {
+							location.reload();
+						} else {
+							alert("글쓰기 실패");
+						}
+						
+					}
+					, error:function() {
+						alert("글쓰기 에러");
+					}
+					
+				});
+				
+			});
+			
+			
 			$("#imageIcon").on("click", function() {
 				// file input을 클릭한것과 똑같은 기능 수행
 				$("#fileInput").click();
