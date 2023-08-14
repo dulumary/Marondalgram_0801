@@ -42,7 +42,7 @@
 							<img class="w-100" src="${post.imagePath }">
 						</div>
 						<div class="p-2">
-							<i class="bi bi-heart"></i> 좋아요 11개
+							<i data-post-id="${post.id }" class="bi bi-heart like-btn"></i> 좋아요 11개
 						</div>
 						<div class="p-2">
 							<b>${post.userName }</b> ${post.content }
@@ -86,6 +86,32 @@
 	
 	<script>
 		$(document).ready(function() {
+			
+			$(".like-btn").on("click", function() {
+				
+				// 좋아요한 대상 게시글 id
+				let postId = $(this).data("post-id");
+				
+				$.ajax({
+					type:"post"
+					, url:"/post/like"
+					, data:{"postId":postId}
+					, success:function(data) {
+						if(data.result == "success") {
+							location.reload();
+						} else {
+							alert("좋아요 실패");
+						}
+						
+					}
+					, error:function() {
+						alert("좋아요 에러");
+					}
+					
+				});
+				
+			});
+			
 			
 			$("#uploadBtn").on("click", function() {
 					
