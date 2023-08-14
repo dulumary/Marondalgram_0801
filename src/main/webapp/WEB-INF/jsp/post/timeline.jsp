@@ -62,8 +62,8 @@
 							</div>
 						
 							<div class="d-flex mt-2">
-								<input type="text" class="form-control">
-								<button type="button" class="btn btn-info">게시</button>
+								<input type="text" class="form-control" id="commentInput${post.id }">
+								<button type="button" class="btn btn-info comment-btn" data-post-id="${post.id }">게시</button>
 							</div>
 						</div>
 						<!-- /댓글 박스 -->
@@ -86,6 +86,36 @@
 	
 	<script>
 		$(document).ready(function() {
+			
+			$(".comment-btn").on("click", function() {
+				// 댓글을 작성한 게시글 id
+				// 댓글 내용 
+				let postId = $(this).data("post-id");
+				//let comment = $("#commentInput" + postId).val();
+				let comment = $(this).prev().val();
+				
+				$.ajax({
+					type:"post"
+					, url:"/post/comment/create"
+					, data:{"postId":postId, "content":comment}
+					, success:function(data) {
+						
+						if(data.result == "success") {
+							location.reload();
+						} else {
+							alert("댓글 작성 실패");
+						}
+						
+					}
+					, error:function() {
+						alert("댓글 작성 에러");
+					}
+					
+				});
+				
+				
+			});
+			
 			
 			$(".like-btn").on("click", function() {
 				
