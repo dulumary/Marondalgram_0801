@@ -2,6 +2,8 @@ package com.marondal.marondalgram.post;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +19,13 @@ public class PostController {
 	private PostService postService;
 	
 	@GetMapping("/timeline-view")
-	public String timeline(Model model) {
+	public String timeline(
+			HttpSession session
+			, Model model) {
 		
-		List<PostDetail> postList = postService.getPostList();
+		int userId = (Integer)session.getAttribute("userId");
+		
+		List<PostDetail> postList = postService.getPostList(userId);
 		
 		model.addAttribute("postList", postList);
 		

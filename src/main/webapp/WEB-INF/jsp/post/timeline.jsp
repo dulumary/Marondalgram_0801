@@ -42,7 +42,8 @@
 							<img class="w-100" src="${post.imagePath }">
 						</div>
 						<div class="p-2">
-							<i data-post-id="${post.id }" class="bi bi-heart like-btn"></i> 좋아요 11개
+							${post.like }
+							<i data-post-id="${post.id }" class="bi bi-heart like-btn"></i> 좋아요 ${post.likeCount }개
 						</div>
 						<div class="p-2">
 							<b>${post.userName }</b> ${post.content }
@@ -53,12 +54,12 @@
 							<div class="px-2">댓글</div>
 							
 							<div class="px-2">
+								<c:forEach var="comment" items="${post.commentList }">
 								<div>
-									<b>hagulu</b> 우와 진짜 멋있네?
+									<b>${comment.userName }</b> ${comment.content }
 								</div>
-								<div>
-									<b>bada</b> 무서워 ㅠㅠ
-								</div>
+								</c:forEach>
+								
 							</div>
 						
 							<div class="d-flex mt-2">

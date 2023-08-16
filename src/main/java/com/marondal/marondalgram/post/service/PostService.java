@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.marondal.marondalgram.comment.dto.CommentDetail;
+import com.marondal.marondalgram.comment.service.CommentService;
 import com.marondal.marondalgram.common.FileManager;
+import com.marondal.marondalgram.like.service.LikeService;
 import com.marondal.marondalgram.post.domain.Post;
 import com.marondal.marondalgram.post.dto.PostDetail;
 import com.marondal.marondalgram.post.repository.PostRepository;
@@ -23,6 +26,12 @@ public class PostService {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private LikeService likeService;
+	
+	@Autowired
+	private CommentService commentService;
+	
 	public int addPost(int userId, String content, MultipartFile file) {
 		
 		String imagePath = FileManager.saveFile(userId, file);
@@ -31,7 +40,7 @@ public class PostService {
 		
 	}
 	
-	public List<PostDetail> getPostList() {
+	public List<PostDetail> getPostList(int userId) {
 
 		List<Post> postList = postRepository.selectPostList();
 		
@@ -40,12 +49,19 @@ public class PostService {
 			
 			User user = userService.getUser(post.getUserId());
 			
+			int likeCount = likeService.getCountByPostId(post.getId());
+			List<CommentDetail> commentList = commentService.getCommentByPostId(post.getId());
+			boolean isLike = likeService.isLike(post.getId(), userId);
+			
 			PostDetail postDetail = PostDetail.builder()
 									.id(post.getId())
 									.content(post.getContent())
 									.imagePath(post.getImagePath())
 									.userId(post.getUserId())
 									.userName(user.getName())
+									.likeCount(likeCount)
+									.commentList(commentList)
+									.isLike(isLike)
 									.build();
 			postDetailList.add(postDetail);
 		}
