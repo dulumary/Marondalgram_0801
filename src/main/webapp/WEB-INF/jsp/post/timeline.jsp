@@ -36,14 +36,25 @@
 					<div class="card my-3">
 						<div class="d-flex justify-content-between p-2">
 							<div>${post.userName }</div>
-							<i class="bi bi-three-dots-vertical"></i>
+							<i class="bi bi-three-dots-vertical" data-toggle="modal" data-target="#moreModal"></i>
 						</div>
 						<div>
 							<img class="w-100" src="${post.imagePath }">
 						</div>
 						<div class="p-2">
-							${post.like }
-							<i data-post-id="${post.id }" class="bi bi-heart like-btn"></i> 좋아요 ${post.likeCount }개
+							
+							<c:choose>
+								<c:when test="${post.like }">
+									<%-- 채워진 하트 아이콘 --%>
+									<i data-post-id="${post.id }" class="bi bi-heart-fill text-danger unlike-btn"></i>
+								</c:when>
+								<c:otherwise>
+									<%-- 비워진 하트 아이콘 --%>
+									<i data-post-id="${post.id }" class="bi bi-heart like-btn"></i>
+								</c:otherwise>
+							
+							</c:choose>
+							 좋아요 ${post.likeCount }개
 						</div>
 						<div class="p-2">
 							<b>${post.userName }</b> ${post.content }
@@ -80,6 +91,19 @@
 		</section>
 		<c:import url="/WEB-INF/jsp/include/footer.jsp" />
 	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="moreModal" tabindex="-1" role="dialog">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      
+	      <div class="modal-body text-center">
+	        삭제하기
+	      </div>
+	      
+	    </div>
+	  </div>
+	</div>
 
 	<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -87,6 +111,27 @@
 	
 	<script>
 		$(document).ready(function() {
+			
+			$(".unlike-btn").on("click", function() {
+				let postId = $(this).data("post-id");
+				
+				$.ajax({
+					type:"delete"
+					, url:"/post/unlike"
+					, data:{"postId":postId}
+					, success:function(data) {
+						if(data.result == "success") {
+							location.reload();
+						} else {
+							alert("좋아요 취소 실패");
+						}
+						
+					}
+					, error:function() {
+						alert("좋아요 취소 에러");
+					}
+				});
+			});
 			
 			$(".comment-btn").on("click", function() {
 				// 댓글을 작성한 게시글 id

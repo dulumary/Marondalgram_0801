@@ -16,4 +16,8 @@ public interface LikeRepository {
 	public int selectCountByPostIdUserId(
 			@Param("postId") int postId
 			, @Param("userId") int userId);
+	
+	public int deleteLike(
+			@Param("postId") int postId
+			, @Param("userId") int userId);
 }

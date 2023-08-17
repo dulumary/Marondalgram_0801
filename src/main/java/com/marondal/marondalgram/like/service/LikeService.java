@@ -34,6 +34,10 @@ public class LikeService {
 		}
 	}
 	
+	public int deleteLike(int postId, int userId) {
+		return likeRepository.deleteLike(postId, userId);
+	}
+	
 	
 	
 
