@@ -69,5 +69,23 @@ public class PostService {
 		return postDetailList;
 		
 	}
+	
+	public int deletePost(int postId, int userId) {
+		
+		Post post = postRepository.selectPost(postId);
+		if(userId == post.getUserId()) {
+			likeService.deleteLikeByPostId(postId);
+			commentService.deleteCommentByPostId(postId);
+			
+			FileManager.removeFile(post.getImagePath());
+			
+			return postRepository.deletePost(postId);
+		} else {
+			
+			return 0;
+		}
+		
+		
+	}
 
 }

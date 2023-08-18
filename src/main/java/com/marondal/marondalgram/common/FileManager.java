@@ -71,5 +71,52 @@ public class FileManager {
 		
 		return "/images" + directoryName + file.getOriginalFilename();
 	}
+	
+	public static boolean removeFile(String filePath) { // /images/1_1691749458813/cat-8042342_640.jpg
+		
+		// 파일 정보가 없는경우 
+		if(filePath == null) {
+			return false;
+		}
+		
+		// 실제 파일이 저장된 파일 경로 만들기 
+		// /images/1_1691749458813/cat-8042342_640.jpg
+		// D:\\김인규 강사\\web\\20230412\\springProject\\upload\\memo/1_1691749458813/cat-8042342_640.jpg
+		// /images 제거하고, 전체 경로에 이어 붙인다. 
+		
+		String fullFilePath = FILE_UPLOAD_PATH + filePath.replace("/images", "");
+		
+		Path path = Paths.get(fullFilePath);
+		
+		// 파일이 존재하는지 
+		if(Files.exists(path)) {
+			
+			try {
+				Files.delete(path);
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+				return false;	
+			}
+		}
+		
+		Path dirPath = path.getParent();
+		
+		if(Files.exists(dirPath)) {
+			
+			try {
+				Files.delete(dirPath);
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+				
+				return false;
+			}
+		}
+		
+		
+		return true;
+		
+	}
 
 }

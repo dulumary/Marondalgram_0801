@@ -38,6 +38,10 @@ public class LikeService {
 		return likeRepository.deleteLike(postId, userId);
 	}
 	
+	public int deleteLikeByPostId(int postId) {
+		return likeRepository.deleteLikeByPostId(postId);
+	}
+	
 	
 	
 

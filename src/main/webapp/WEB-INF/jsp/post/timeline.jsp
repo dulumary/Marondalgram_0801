@@ -36,7 +36,9 @@
 					<div class="card my-3">
 						<div class="d-flex justify-content-between p-2">
 							<div>${post.userName }</div>
-							<i class="bi bi-three-dots-vertical" data-toggle="modal" data-target="#moreModal"></i>
+							<c:if test="${post.userId == userId }">
+							<i data-post-id="${post.id }" class="bi bi-three-dots-vertical more-btn" data-toggle="modal" data-target="#moreModal"></i>
+							</c:if>
 						</div>
 						<div>
 							<img class="w-100" src="${post.imagePath }">
@@ -98,7 +100,7 @@
 	    <div class="modal-content">
 	      
 	      <div class="modal-body text-center">
-	        삭제하기
+	        <a href="#" id="deleteBtn">삭제하기</a>
 	      </div>
 	      
 	    </div>
@@ -111,6 +113,38 @@
 	
 	<script>
 		$(document).ready(function() {
+			
+			$("#deleteBtn").on("click", function() {
+				
+				let postId = $(this).data("post-id");
+				
+				
+				$.ajax({
+					type:"delete"
+					, url:"/post/delete"
+					, data:{"postId":postId}
+					, success:function(data) {
+						if(data.result == "success") {
+							location.reload();
+						} else {
+							alert("삭제 실패");
+						}
+					}
+					, error:function() {
+						
+						alert("삭제 에러");
+					}
+				});
+
+				
+			});
+			
+			$(".more-btn").on("click", function() {
+				let postId = $(this).data("post-id");
+				
+				$("#deleteBtn").data("post-id", postId);
+				
+			});
 			
 			$(".unlike-btn").on("click", function() {
 				let postId = $(this).data("post-id");
