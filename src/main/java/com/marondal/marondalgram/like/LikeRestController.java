@@ -45,7 +45,6 @@ public class LikeRestController {
 			@RequestParam("postId") int postId
 			, HttpSession session) {
 		
-		
 		int userId = (Integer)session.getAttribute("userId");
 		
 		int count = likeService.deleteLike(postId, userId);

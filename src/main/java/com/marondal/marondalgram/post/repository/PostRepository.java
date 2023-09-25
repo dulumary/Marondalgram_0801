@@ -16,7 +16,9 @@ public interface PostRepository {
 			, @Param("imagePath") String imagePath);
 	
 	public Post selectPost(@Param("id") int id);
-	public List<Post> selectPostList();
+	public List<Post> selectPostList(@Param("userId") Integer userId);
+	
+	public List<Post> selectPostByIdList(@Param("idList") List<Integer> idList);
 	
 	public int deletePost(@Param("postId") int postId);
 	

@@ -24,7 +24,7 @@
 	
 	</insert>
 	
-	<select id="selectPostList"  resultType="com.marondal.marondalgram.post.domain.Post">
+	<select id="selectPostList" parameterType="integer" resultType="com.marondal.marondalgram.post.domain.Post">
 	
 		SELECT 
 			`id`
@@ -35,9 +35,15 @@
 			, `updatedAt`
 		FROM 
 			`post`
+		<if test="userId != null">
+		WHERE
+			`userId` = #{userId}
+		</if>
 		ORDER BY 
 			`id` DESC
-	
+		
+		
+		
 	</select>
 	
 	<select id="selectPost" parameterType="int"
@@ -54,6 +60,24 @@
 			`post`
 		WHERE 
 			`id` = #{id}
+	</select>
+	
+	<select id="selectPostByIdList" parameterType="integer"
+	resultType="com.marondal.marondalgram.post.domain.Post">
+		SELECT 
+			`id`
+			, `userId`
+			, `content`
+			, `imagePath`
+			, `createdAt`
+			, `updatedAt`
+		FROM 
+			`post`
+		WHERE 
+			`id` IN 
+		<foreach item="id" collection="idList" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
 	</select>
 	
 	

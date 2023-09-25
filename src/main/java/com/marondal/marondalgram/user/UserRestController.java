@@ -3,10 +3,12 @@ package com.marondal.marondalgram.user;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,7 @@ import com.marondal.marondalgram.user.service.UserService;
 
 @RequestMapping("/user")
 @RestController
+@Validated
 public class UserRestController {
 	
 	@Autowired
@@ -25,10 +28,12 @@ public class UserRestController {
 	
 	@PostMapping("/join")
 	public Map<String, String> join(
-			@RequestParam("loginId") String loginId
+			@Size(min=4, max=8) @RequestParam("loginId")  String loginId
 			, @RequestParam("password") String password
 			, @RequestParam("name") String name
-			, @RequestParam("email") String email) {
+			, @Email @RequestParam("email") String email) {
+		
+		
 		
 		User user = userService.addUser(loginId, password, name, email);
 		Map<String, String> resultMap = new HashMap<>();

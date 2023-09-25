@@ -40,9 +40,9 @@ public class PostService {
 		
 	}
 	
-	public List<PostDetail> getPostList(int userId) {
+	public List<PostDetail> getPostList(int userId, Integer targetUserId) {
 
-		List<Post> postList = postRepository.selectPostList();
+		List<Post> postList = postRepository.selectPostList(targetUserId);
 		
 		List<PostDetail> postDetailList = new ArrayList<>();
 		for(Post post:postList) {
@@ -67,6 +67,30 @@ public class PostService {
 		}
 		
 		return postDetailList;
+		
+	}
+	
+	public PostDetail getPost(int id) {
+		
+		Post post = postRepository.selectPost(id);
+		User user = userService.getUser(post.getUserId());
+		
+		int likeCount = likeService.getCountByPostId(post.getId());
+		List<CommentDetail> commentList = commentService.getCommentByPostId(post.getId());
+		
+		PostDetail postDetail = PostDetail.builder()
+								.id(post.getId())
+								.content(post.getContent())
+								.imagePath(post.getImagePath())
+								.userId(post.getUserId())
+								.userName(user.getName())
+								.likeCount(likeCount)
+								.commentList(commentList)
+								.build();
+		
+		return postDetail;
+		
+		
 		
 	}
 	

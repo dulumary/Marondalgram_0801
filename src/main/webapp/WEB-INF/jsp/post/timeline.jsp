@@ -88,6 +88,8 @@
 				</div>
 				<!-- /카드 리스트 -->
 				
+				<button type="button" class="btn btn-info btn-block" id="addCardBtn">카드 추가</button>
+				
 			</div>
 			<!-- /타임라인 -->
 		</section>
@@ -113,6 +115,21 @@
 	
 	<script>
 		$(document).ready(function() {
+			
+			$("#addCardBtn").on("click", function() {
+				
+				$.ajax({
+					type:"get"
+					, url:"/post/card"
+					, data:{"id":3}
+					, success:function(data) {
+						
+						$(".card-list").append(data);
+					}
+					
+				});
+				
+			});
 			
 			$("#deleteBtn").on("click", function() {
 				
